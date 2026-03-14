@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brooks Hard Seltzer — Born from water. Made for moments.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal: #0B6E6E;
+  --coral: #F4845F;
+  --light: #E8F4F4;
+  --dark: #0D2B2B;
+  --white: #FAFCFC;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* ─── AGE GATE ─── */
+#age-gate {
+  position: fixed; inset: 0;
+  background: var(--dark);
+  z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.6s ease;
+}
+#age-gate.hidden { opacity: 0; pointer-events: none; }
+.age-gate-inner {
+  text-align: center;
+  padding: 2rem;
+  max-width: 480px;
+}
+.age-gate-wave {
+  margin-bottom: 2rem;
+}
+.age-gate-wave img {
+  height: 125px;
+  width: auto;
+}
+.age-gate-inner h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.age-gate-inner p {
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+}
+.age-gate-buttons { display: flex; gap: 1rem; justify-content: center; }
+.age-btn {
+  padding: 0.85rem 2.5rem;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+.age-btn-yes { background: var(--coral); color: white; border-color: var(--coral); }
+.age-btn-yes:hover { background: #e5704a; }
+.age-btn-no { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.3); }
+.age-btn-no:hover { border-color: white; }
+#age-sorry {
+  display: none;
+  margin-top: 1.5rem;
+  color: var(--coral);
+  font-size: 0.95rem;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0.6rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(13, 43, 43, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.3s ease;
+}
+nav.scrolled {
+  background: rgba(13, 43, 43, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.4rem 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+.nav-logo {
+  display: flex; align-items: center;
+  text-decoration: none;
+}
+.nav-logo img {
+  height: 90px;
+  width: auto;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: white; }
+.nav-shop {
+  background: var(--coral);
+  color: white !important;
+  padding: 0.55rem 1.4rem;
+  border-radius: 50px;
+  font-weight: 600 !important;
+  transition: background 0.2s !important;
+}
+.nav-shop:hover { background: #e5704a !important; color: white !important; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: white; border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--dark);
+  z-index: 999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--coral); }
+.mobile-menu .nav-shop {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+}
+
+/* ─── HERO ─── */
+#hero {
+  position: relative;
+  height: 100vh; min-height: 600px;
+  background: linear-gradient(180deg, #05b8c7 0%, #1ad4d4 30%, #48e8d8 55%, #8cf0e6 75%, #caf5ed 90%, #eefcf8 100%);
+  display: flex; align-items: center; justify-content: flex-start;
+  overflow: hidden;
+}
+
+/* Ripple rings */
+.ripple-container {
+  position: absolute;
+  bottom: -100px; left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.ripple {
+  position: absolute;
+  border: 1.5px solid rgba(255,255,255,0.45);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple-expand 6s ease-out infinite;
+}
+.ripple:nth-child(1) { width: 200px; height: 200px; animation-delay: 0s; }
+.ripple:nth-child(2) { width: 200px; height: 200px; animation-delay: 1s; }
+.ripple:nth-child(3) { width: 200px; height: 200px; animation-delay: 2s; }
+.ripple:nth-child(4) { width: 200px; height: 200px; animation-delay: 3s; }
+.ripple:nth-child(5) { width: 200px; height: 200px; animation-delay: 4s; }
+
+@keyframes ripple-expand {
+  0% { width: 100px; height: 100px; opacity: 0.5; }
+  100% { width: 900px; height: 900px; opacity: 0; }
+}
+
+/* Bubbles */
+.bubbles {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden;
+}
+.bubble {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  animation: bubble-float linear infinite;
+}
+@keyframes bubble-float {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-110vh) translateX(20px); opacity: 0; }
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: left;
+  padding: 2rem 2rem 2rem max(2rem, 7vw);
+  max-width: 580px;
+}
+
+.hero-headline {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  color: var(--dark);
+  line-height: 1.05;
+  font-weight: 900;
+  margin-bottom: 1.25rem;
+}
+.hero-headline .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.hero-headline .word.visible {
+  opacity: 1; transform: translateY(0);
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: rgba(13,43,43,0.65);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease 1.2s, transform 0.6s ease 1.2s;
+}
+.hero-sub.visible { opacity: 1; transform: translateY(0); }
+
+.hero-buttons {
+  display: flex; gap: 1rem; justify-content: flex-start; flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease 1.5s, transform 0.6s ease 1.5s;
+}
+.hero-buttons.visible { opacity: 1; transform: translateY(0); }
+
+.btn-coral {
+  background: var(--coral);
+  color: white;
+  padding: 0.9rem 2.2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.2s;
+  display: inline-block;
+}
+.btn-coral:hover { background: #e5704a; transform: translateY(-2px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--dark);
+  padding: 0.9rem 2.2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border: 2px solid rgba(13,43,43,0.35);
+  transition: border-color 0.25s, transform 0.2s;
+  display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--dark); transform: translateY(-2px); }
+
+/* Can illustration */
+.can-anchor {
+  position: absolute;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.can-wrapper {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0s; /* rAF handles smoothing, no CSS transition */
+}
+.hero-can-img {
+  display: block;
+  max-height: 420px;
+  width: auto;
+  filter: drop-shadow(0 30px 50px rgba(0,0,0,0.3)) drop-shadow(0 0 80px rgba(11,110,110,0.25));
+  pointer-events: none;
+  user-select: none;
+}
+/* Ground shadow that subtly shifts with tilt */
+.can-anchor::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.35) 0%, transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* Hero decorative elements (Mana-inspired) */
+.hero-deco {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.deco-star {
+  position: absolute;
+}
+.deco-star.s1 { width: 44px; top: 18%; left: 58%; animation: star-spin 22s linear infinite, star-pulse 4s ease-in-out infinite; }
+.deco-star.s2 { width: 22px; top: 70%; left: 42%; animation: star-spin 14s linear infinite reverse, star-pulse 5s ease-in-out infinite 1.2s; }
+.deco-star.s3 { width: 32px; top: 25%; right: 20%; animation: star-spin 28s linear infinite, star-pulse 6s ease-in-out infinite 0.5s; }
+.deco-star.s4 { width: 16px; top: 78%; right: 16%; animation: star-spin 10s linear infinite reverse, star-pulse 3s ease-in-out infinite 2s; }
+.deco-star.s5 { width: 28px; top: 50%; left: 52%; animation: star-spin 18s linear infinite, star-pulse 5s ease-in-out infinite 3s; }
+.deco-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.07);
+}
+.deco-ring.r1 { width: 320px; height: 320px; top: 8%; right: 12%; animation: ring-pulse 9s ease-in-out infinite; }
+.deco-ring.r2 { width: 200px; height: 200px; top: 23%; right: 20%; animation: ring-pulse 9s ease-in-out infinite 2.5s; }
+.deco-ring.r3 { width: 120px; height: 120px; top: 34%; right: 25%; animation: ring-pulse 9s ease-in-out infinite 5s; }
+
+@keyframes star-spin { to { transform: rotate(360deg); } }
+@keyframes star-pulse { 0%,100% { opacity: 0.5; transform: scale(1) rotate(0deg); } 50% { opacity: 1; transform: scale(1.15) rotate(180deg); } }
+@keyframes ring-pulse { 0%,100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.04); opacity: 0.8; } }
+
+/* Scroll cue */
+.scroll-cue {
+  position: absolute;
+  bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.4rem;
+  color: rgba(13,43,43,0.4);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: cue-fade 2s ease-in-out infinite alternate;
+}
+@keyframes cue-fade { from { opacity: 0.4; } to { opacity: 1; } }
+.scroll-arrow { animation: cue-bounce 1.5s ease infinite; }
+@keyframes cue-bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ─── WHAT IS BROOKS ─── */
+#what {
+  background: var(--dark);
+  padding: 6rem 2rem;
+}
+.section-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+#what .section-label { text-align: center; }
+#what h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: white;
+  text-align: center;
+  margin-bottom: 4rem;
+  font-weight: 700;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.feature-tile {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+.feature-tile.visible {
+  opacity: 1; transform: translateY(0);
+}
+.feature-tile:hover {
+  box-shadow: 0 0 40px rgba(11,110,110,0.3);
+  border-color: rgba(11,110,110,0.5);
+  transform: translateY(-4px);
+}
+.feature-icon {
+  width: 52px; height: 52px;
+  margin-bottom: 1.25rem;
+}
+.feature-tile h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.feature-tile p {
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* ─── FLAVOURS ─── */
+#flavours {
+  position: relative;
+  padding: 5rem 0 4rem;
+  background: linear-gradient(180deg, #0ab4b4 0%, #1cc8c2 30%, #3edbc8 60%, #7aeede 85%, #c2f5ec 100%);
+  overflow: hidden;
+}
+.flavour-bubbles {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden;
+}
+.flavour-bubbles .bubble {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  animation: bubble-float linear infinite;
+}
+#flavours .section-label { margin-bottom: 0.5rem; padding-left: 2rem; position: relative; z-index: 1; color: rgba(13,43,43,0.6); }
+#flavours h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: var(--dark);
+  margin-bottom: 2.5rem;
+  font-weight: 900;
+  line-height: 1;
+  padding-left: 2rem;
+  position: relative; z-index: 1;
+}
+.flavours-row {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 2rem 0 1rem;
+  scrollbar-width: none;
+  position: relative;
+  z-index: 1;
+}
+.flavours-row::-webkit-scrollbar { display: none; }
+.flavour-card {
+  flex: 0 0 80vw;
+  max-width: 320px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  scroll-snap-align: center;
+  position: relative;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 1rem 0;
+  opacity: 1;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.flavour-card:hover {
+  transform: scale(1.06);
+}
+
+.flavour-card .can-photo {
+  width: auto;
+  height: clamp(260px, 40vh, 360px);
+  margin: 0 auto 1.25rem;
+  display: block;
+  filter: drop-shadow(0 12px 35px rgba(0,0,0,0.18));
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.flavour-card:hover .can-photo {
+  transform: scale(1.08) rotate(-2deg);
+}
+.flavour-card h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem;
+  color: var(--dark);
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+}
+.flavour-card p {
+  font-size: 0.9rem;
+  color: rgba(13,43,43,0.55);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.flavour-link { display: none; }
+
+/* Dot indicators */
+.flavour-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+.flavour-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dark);
+  opacity: 0.15;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.flavour-dot.active {
+  opacity: 0.7;
+  transform: scale(1.35);
+}
+
+/* ─── STORY ─── */
+#story {
+  background: var(--light);
+  padding: 6rem 2rem;
+  overflow: hidden;
+}
+.story-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.story-text .section-label { margin-bottom: 1rem; }
+.story-text h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.story-text p {
+  color: rgba(13,43,43,0.7);
+  line-height: 1.8;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+.story-text p:last-of-type { margin-bottom: 2rem; }
+.story-illustration {
+  position: relative;
+}
+.story-illustration svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 20px 60px rgba(11,110,110,0.15));
+}
+
+/* ─── SOCIAL PROOF ─── */
+#social-proof {
+  background: var(--teal);
+  padding: 6rem 2rem;
+  text-align: center;
+}
+.big-quote {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  color: white;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.3;
+  font-weight: 400;
+}
+.rating-row {
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  margin-bottom: 3.5rem;
+}
+.stars { color: #FFD700; font-size: 1.4rem; letter-spacing: 2px; }
+.rating-text { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+
+.insta-grid {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.insta-tile {
+  width: 200px; height: 200px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.insta-tile-bg {
+  position: absolute; inset: 0;
+}
+.insta-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
+  display: flex; align-items: flex-end; padding: 0.75rem;
+}
+.insta-handle {
+  color: white; font-size: 0.75rem; font-weight: 600;
+}
+
+/* ─── WHERE TO BUY ─── */
+#buy {
+  padding: 6rem 2rem;
+  background: var(--white);
+}
+#buy .inner {
+  max-width: 900px; margin: 0 auto; text-align: center;
+}
+#buy h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--dark);
+  margin-bottom: 2.5rem;
+  font-weight: 900;
+}
+.retailer-badges {
+  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+  margin-bottom: 1.75rem;
+}
+.retailer-badge {
+  padding: 0.7rem 1.75rem;
+  border-radius: 50px;
+  border: 2px solid var(--teal);
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.25s, color 0.25s;
+  cursor: default;
+}
+.retailer-badge:hover { background: var(--teal); color: white; }
+.order-link {
+  display: inline-block;
+  color: var(--coral);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 3rem;
+  transition: color 0.2s;
+}
+.order-link:hover { color: #e5704a; }
+.sa-map-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ─── NEWSLETTER ─── */
+#newsletter {
+  background: var(--dark);
+  padding: 6rem 2rem;
+  text-align: center;
+}
+#newsletter h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: white;
+  margin-bottom: 0.75rem;
+  font-weight: 900;
+}
+#newsletter p {
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2.5rem;
+  font-size: 0.95rem;
+}
+.newsletter-form {
+  display: flex; gap: 0.75rem; justify-content: center;
+  flex-wrap: wrap;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.newsletter-form input[type="email"] {
+  flex: 1 1 260px;
+  padding: 0.9rem 1.5rem;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.07);
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.newsletter-form input::placeholder { color: rgba(255,255,255,0.35); }
+.newsletter-form input:focus { border-color: var(--coral); }
+.newsletter-form button {
+  padding: 0.9rem 2rem;
+  background: var(--coral);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s;
+}
+.newsletter-form button:hover { background: #e5704a; transform: translateY(-2px); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--dark);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.footer-wave {
+  display: block;
+  width: 100%;
+  margin-bottom: -2px;
+}
+.footer-inner {
+  padding: 3rem 2rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.footer-logo {
+  display: flex; align-items: center;
+  text-decoration: none;
+}
+.footer-logo img {
+  height: 80px;
+  width: auto;
+}
+.footer-links {
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+  list-style: none;
+}
+.footer-links a {
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: white; }
+.footer-copy {
+  width: 100%;
+  text-align: center;
+  color: rgba(255,255,255,0.25);
+  font-size: 0.78rem;
+  padding-bottom: 2rem;
+  line-height: 1.7;
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1; transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (min-width: 901px) {
+  .flavour-card { flex: 0 0 280px; max-width: 280px; }
+  .flavour-card .can-photo { height: clamp(280px, 42vh, 380px); }
+  .flavour-dots { display: none; }
+}
+
+@media (max-width: 900px) {
+  .story-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .hero-deco { display: none; }
+  .features-grid { grid-template-columns: 1fr; max-width: 500px; }
+
+  /* Mobile hero: stack text above, can below center-right */
+  #hero {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 100px;
+  }
+  .hero-content {
+    position: relative;
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 100%;
+    margin-bottom: 0;
+    padding-top: 2rem;
+  }
+  .hero-headline { font-size: clamp(2.8rem, 10vw, 4.5rem); }
+  .hero-sub { display: none; }
+  .hero-buttons { display: none !important; }
+  .can-anchor {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    display: flex;
+    justify-content: center;
+    margin-top: -0.5rem;
+  }
+  .hero-can-img {
+    max-height: 300px;
+  }
+  .can-anchor::after {
+    bottom: -12px;
+    width: 80px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .insta-tile { width: 160px; height: 160px; }
+}
+
+@media (max-width: 480px) {
+  .flavour-card .can-photo { height: clamp(240px, 35vh, 300px); }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+}
+
+/* Mobile: one flavour card visible at a time, centered */
+@media (max-width: 900px) {
+  .flavours-row {
+    scroll-padding: 0 calc((100vw - 80vw) / 2);
+  }
+  .flavour-card {
+    flex: 0 0 100vw;
+    max-width: 100vw;
+    padding: 1rem 10vw;
+    box-sizing: border-box;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- AGE GATE -->
+<div id="age-gate" role="dialog" aria-modal="true" aria-label="Age verification">
+  <div class="age-gate-inner">
+    <div class="age-gate-wave">
+      <img src="brooks photos/brookslogo.png" alt="Brooks Hard Seltzer">
+    </div>
+    <h2>Are you 18 or older?</h2>
+    <p>Brooks Hard Seltzer is an alcoholic beverage.<br>Please confirm your age to continue.</p>
+    <div class="age-gate-buttons">
+      <button class="age-btn age-btn-yes" id="age-yes">Yes, I'm 18+</button>
+      <button class="age-btn age-btn-no" id="age-no">No</button>
+    </div>
+    <p id="age-sorry">Sorry, you must be 18+ to enter.</p>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#story" onclick="closeMobile()">Our Story</a>
+  <a href="#flavours" onclick="closeMobile()">Flavours</a>
+  <a href="#buy" onclick="closeMobile()">Where to Buy</a>
+  <a href="#" onclick="closeMobile()">Instagram</a>
+  <a href="#buy" class="nav-shop btn-coral" onclick="closeMobile()">Shop Online</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo" aria-label="Brooks Hard Seltzer home">
+    <img src="brooks photos/brookslogo.png" alt="Brooks Hard Seltzer">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#flavours">Flavours</a></li>
+    <li><a href="#buy">Where to Buy</a></li>
+    <li><a href="#">Instagram</a></li>
+    <li><a href="#buy" class="nav-shop">Shop Online</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero" aria-label="Hero">
+  <div class="bubbles" aria-hidden="true" id="bubbles-container"></div>
+  <div class="ripple-container" aria-hidden="true">
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-headline" aria-label="Seltzer Done Properly.">
+      <span class="word" data-delay="0">Seltzer</span>
+      <span class="word" data-delay="200"> Done</span>
+      <span class="word" data-delay="400"> Properly.</span>
+    </h1>
+    <p class="hero-sub">Born from water. Made for moments.</p>
+    <div class="hero-buttons">
+      <a href="#flavours" class="btn-coral">Explore Flavours</a>
+      <a href="#story" class="btn-ghost">Our Story</a>
+    </div>
+  </div>
+
+  <!-- Decorative elements (Mana-inspired) -->
+  <div class="hero-deco" aria-hidden="true">
+    <!-- 4-pointed stars -->
+    <svg class="deco-star s1" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.8 10.2L22 12L13.8 13.8L12 22L10.2 13.8L2 12L10.2 10.2Z" fill="rgba(255,255,255,0.18)"/></svg>
+    <svg class="deco-star s2" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.8 10.2L22 12L13.8 13.8L12 22L10.2 13.8L2 12L10.2 10.2Z" fill="rgba(244,132,95,0.35)"/></svg>
+    <svg class="deco-star s3" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.8 10.2L22 12L13.8 13.8L12 22L10.2 13.8L2 12L10.2 10.2Z" fill="rgba(255,255,255,0.12)"/></svg>
+    <svg class="deco-star s4" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.8 10.2L22 12L13.8 13.8L12 22L10.2 13.8L2 12L10.2 10.2Z" fill="rgba(244,132,95,0.25)"/></svg>
+    <svg class="deco-star s5" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.8 10.2L22 12L13.8 13.8L12 22L10.2 13.8L2 12L10.2 10.2Z" fill="rgba(255,255,255,0.1)"/></svg>
+    <!-- Concentric rings around can -->
+    <div class="deco-ring r1"></div>
+    <div class="deco-ring r2"></div>
+    <div class="deco-ring r3"></div>
+  </div>
+
+  <!-- Hero Can Photo -->
+  <div class="can-anchor" aria-hidden="true">
+    <div class="can-wrapper" id="can-3d">
+      <img src="brooks photos/1.png" alt="Brooks Strawberry Kiwi Hard Seltzer can" class="hero-can-img" width="220" height="auto" draggable="false">
+    </div>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Scroll</span>
+    <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M8 3 L8 13 M4 9 L8 13 L12 9" stroke="rgba(13,43,43,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- WHAT IS BROOKS -->
+<section id="what" aria-labelledby="what-heading">
+  <p class="section-label">Why Brooks?</p>
+  <h2 id="what-heading">Seltzer done properly.</h2>
+  <div class="features-grid">
+
+    <div class="feature-tile reveal">
+      <svg class="feature-icon" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+        <circle cx="26" cy="26" r="24" fill="rgba(11,110,110,0.15)" stroke="#0B6E6E" stroke-width="1.5"/>
+        <circle cx="26" cy="20" r="6" fill="none" stroke="#0B6E6E" stroke-width="1.5"/>
+        <circle cx="26" cy="20" r="2" fill="#0B6E6E"/>
+        <path d="M14 36 Q18 28 26 28 Q34 28 38 36" stroke="#0B6E6E" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="18" cy="32" r="2.5" fill="rgba(11,110,110,0.3)" stroke="#0B6E6E" stroke-width="1"/>
+        <circle cx="34" cy="32" r="2.5" fill="rgba(11,110,110,0.3)" stroke="#0B6E6E" stroke-width="1"/>
+        <circle cx="26" cy="36" r="2.5" fill="rgba(11,110,110,0.3)" stroke="#0B6E6E" stroke-width="1"/>
+      </svg>
+      <h3>Naturally Sparkling</h3>
+      <p>Real sparkling water, no artificial fizz. Just pure carbonation the way nature intended.</p>
+    </div>
+
+    <div class="feature-tile reveal" style="transition-delay:0.1s">
+      <svg class="feature-icon" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+        <circle cx="26" cy="26" r="24" fill="rgba(124,179,66,0.1)" stroke="#7CB342" stroke-width="1.5"/>
+        <path d="M26 10 C26 10 20 16 18 22 C16 28 18 34 22 36 C22 36 20 30 24 28 C24 28 22 34 26 38 C30 34 28 28 28 28 C32 30 30 36 30 36 C34 34 36 28 34 22 C32 16 26 10 26 10Z" fill="#7CB342" opacity="0.8"/>
+        <path d="M26 38 L26 42" stroke="#7CB342" stroke-width="2" stroke-linecap="round"/>
+        <path d="M22 20 C22 20 16 18 14 22" stroke="#7CB342" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+        <path d="M30 20 C30 20 36 18 38 22" stroke="#7CB342" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+      <h3>South African Botanicals</h3>
+      <p>Every flavour inspired by local plants and places. From fynbos valleys to tropical coasts.</p>
+    </div>
+
+    <div class="feature-tile reveal" style="transition-delay:0.2s">
+      <svg class="feature-icon" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+        <circle cx="26" cy="26" r="24" fill="rgba(244,132,95,0.1)" stroke="#F4845F" stroke-width="1.5"/>
+        <text x="26" y="32" text-anchor="middle" font-family="'Fraunces', serif" font-size="16" font-weight="700" fill="#F4845F">88</text>
+        <path d="M14 38 L38 38" stroke="#F4845F" stroke-width="1.5" stroke-linecap="round"/>
+        <text x="26" y="45" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="7" fill="#F4845F" letter-spacing="1">CALORIES</text>
+        <path d="M16 20 L20 14 L24 20" stroke="#F4845F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
+      </svg>
+      <h3>Only 88 Calories</h3>
+      <p>Light on the waistline. Heavy on taste. More sessions, less guilt.</p>
+    </div>
+
+    <div class="feature-tile reveal" style="transition-delay:0.3s">
+      <svg class="feature-icon" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+        <circle cx="26" cy="26" r="24" fill="rgba(255,160,0,0.1)" stroke="#F9A03F" stroke-width="1.5"/>
+        <circle cx="26" cy="22" r="8" fill="none" stroke="#F9A03F" stroke-width="1.5"/>
+        <line x1="18" y1="14" x2="34" y2="30" stroke="#F9A03F" stroke-width="2" stroke-linecap="round"/>
+        <path d="M20 32 C20 32 22 36 26 36 C30 36 32 32 32 32" stroke="#F9A03F" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+        <circle cx="26" cy="36" r="2" fill="#F9A03F" opacity="0.5"/>
+      </svg>
+      <h3>No Artificial Sweeteners</h3>
+      <p>Sweetened with real fruit. That's it. No aspartame, no stevia, no nonsense.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- FLAVOURS -->
+<section id="flavours" aria-labelledby="flavours-heading">
+  <div class="flavour-bubbles" id="flavour-bubbles" aria-hidden="true"></div>
+  <p class="section-label">Five Ways to Explore</p>
+  <h2 id="flavours-heading">Pick your adventure.</h2>
+  <div class="flavours-row">
+
+    <!-- Dragon Granadilla -->
+    <div class="flavour-card" aria-label="Dragon Granadilla flavour">
+      <img src="brooks photos/2.png" alt="Brooks Dragon Granadilla can" class="can-photo" draggable="false">
+      <h3>Dragon Granadilla</h3>
+      <p>Sweet, exotic, tropical</p>
+      <a href="#" class="flavour-link">Learn more →</a>
+    </div>
+
+    <!-- Strawberry Kiwi -->
+    <div class="flavour-card" aria-label="Strawberry Kiwi flavour">
+      <img src="brooks photos/1.png" alt="Brooks Strawberry Kiwi can" class="can-photo" draggable="false">
+      <h3>Strawberry Kiwi</h3>
+      <p>Fresh, fruity, classic summer</p>
+      <a href="#" class="flavour-link">Learn more →</a>
+    </div>
+
+    <!-- Watermelon -->
+    <div class="flavour-card" aria-label="Watermelon flavour">
+      <img src="brooks photos/3.png" alt="Brooks Watermelon can" class="can-photo" draggable="false">
+      <h3>Watermelon</h3>
+      <p>Crisp, refreshing, beach energy</p>
+      <a href="#" class="flavour-link">Learn more →</a>
+    </div>
+
+    <!-- Mango Marula -->
+    <div class="flavour-card" aria-label="Mango Marula flavour">
+      <img src="brooks photos/4.png" alt="Brooks Mango Marula can" class="can-photo" draggable="false">
+      <h3>Mango Marula</h3>
+      <p>Warm, indulgent, uniquely SA</p>
+      <a href="#" class="flavour-link">Learn more →</a>
+    </div>
+
+    <!-- Prickly Lime -->
+    <div class="flavour-card" aria-label="Prickly Lime flavour">
+      <img src="brooks photos/5.png" alt="Brooks Prickly Lime can" class="can-photo" draggable="false">
+      <h3>Prickly Lime</h3>
+      <p>Zesty, tangy, adventurous</p>
+      <a href="#" class="flavour-link">Learn more →</a>
+    </div>
+
+  </div>
+  <div class="flavour-dots" id="flavour-dots">
+    <button class="flavour-dot active" data-index="0" aria-label="Dragon Granadilla"></button>
+    <button class="flavour-dot" data-index="1" aria-label="Strawberry Kiwi"></button>
+    <button class="flavour-dot" data-index="2" aria-label="Watermelon"></button>
+    <button class="flavour-dot" data-index="3" aria-label="Mango Marula"></button>
+    <button class="flavour-dot" data-index="4" aria-label="Prickly Lime"></button>
+  </div>
+</section>
+
+<!-- STORY -->
+<section id="story" aria-labelledby="story-heading">
+  <div class="story-inner">
+    <div class="story-text reveal">
+      <p class="section-label">Our Story</p>
+      <h2 id="story-heading">From the mountains to the coast.</h2>
+      <p>Brooks was born from a simple idea: South Africa deserves a hard seltzer as wild and beautiful as its landscape. We started at the foot of the Hottentots-Holland mountains, where cold mountain water meets fynbos air, and asked — what if we bottled that feeling?</p>
+      <p>Every can of Brooks starts with pristine South African spring water, naturally carbonated and paired with botanicals sourced from our coastal valleys and subtropical forests. No compromises. No shortcuts.</p>
+      <p>We make Brooks for the sundowner braais, the early morning surf checks, the summit celebrations and the lazy afternoon floats. Wherever the moment finds you — Brooks is there.</p>
+      <a href="#flavours" class="btn-coral">Explore the Range</a>
+    </div>
+    <div class="story-illustration reveal" style="transition-delay:0.2s" id="story-svg" aria-hidden="true">
+      <!-- Fynbos Landscape SVG -->
+      <svg viewBox="0 0 520 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#b2dfdb"/>
+            <stop offset="100%" stop-color="#e0f2f1"/>
+          </linearGradient>
+          <linearGradient id="oceanGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0B6E6E"/>
+            <stop offset="100%" stop-color="#004d4d"/>
+          </linearGradient>
+          <linearGradient id="mountain1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#546e7a"/>
+            <stop offset="100%" stop-color="#37474f"/>
+          </linearGradient>
+          <linearGradient id="mountain2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#78909c"/>
+            <stop offset="100%" stop-color="#546e7a"/>
+          </linearGradient>
+        </defs>
+        <!-- Sky -->
+        <rect width="520" height="420" fill="url(#skyGrad)"/>
+        <!-- Sun -->
+        <circle cx="400" cy="80" r="36" fill="#fff9c4" opacity="0.8"/>
+        <circle cx="400" cy="80" r="28" fill="#ffe082"/>
+        <!-- Sun rays -->
+        <line x1="400" y1="36" x2="400" y2="28" stroke="#ffe082" stroke-width="2" opacity="0.6"/>
+        <line x1="425" y1="45" x2="432" y2="38" stroke="#ffe082" stroke-width="2" opacity="0.6"/>
+        <line x1="444" y1="80" x2="452" y2="80" stroke="#ffe082" stroke-width="2" opacity="0.6"/>
+        <line x1="425" y1="115" x2="432" y2="122" stroke="#ffe082" stroke-width="2" opacity="0.6"/>
+        <line x1="375" y1="45" x2="368" y2="38" stroke="#ffe082" stroke-width="2" opacity="0.6"/>
+        <line x1="356" y1="80" x2="348" y2="80" stroke="#ffe082" stroke-width="2" opacity="0.6"/>
+        <!-- Far mountains -->
+        <path d="M0 240 L80 120 L160 200 L240 100 L320 180 L400 80 L480 160 L520 120 L520 280 L0 280 Z" fill="url(#mountain1)" opacity="0.5"/>
+        <!-- Mid mountains -->
+        <path d="M0 280 L60 180 L130 240 L200 160 L280 220 L350 150 L420 200 L480 170 L520 200 L520 310 L0 310 Z" fill="url(#mountain2)" opacity="0.75"/>
+        <!-- Foreground hill -->
+        <path d="M0 310 Q130 270 260 300 Q390 330 520 295 L520 420 L0 420 Z" fill="#4e7c3a"/>
+        <!-- Ocean strip -->
+        <path d="M0 295 Q130 285 260 295 Q390 305 520 290 L520 340 L0 340 Z" fill="url(#oceanGrad)" opacity="0.6"/>
+        <!-- Ocean shimmer -->
+        <path d="M40 310 Q100 306 160 310" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+        <path d="M200 305 Q280 300 360 305" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+        <!-- Protea 1 (left) -->
+        <g transform="translate(70, 260)">
+          <!-- Stem -->
+          <line x1="0" y1="80" x2="0" y2="20" stroke="#4a7c59" stroke-width="3" stroke-linecap="round"/>
+          <!-- Leaves -->
+          <path d="M0 60 C-15 52 -18 40 -10 38" stroke="#4a7c59" stroke-width="2" fill="#6abf69" opacity="0.8"/>
+          <path d="M0 50 C12 42 16 30 8 28" stroke="#4a7c59" stroke-width="2" fill="#6abf69" opacity="0.8"/>
+          <!-- Petals outer -->
+          <path d="M0 20 C-12 10 -18 -4 -10 -10 C-2 -16 4 -6 0 20Z" fill="#e91e63" opacity="0.85"/>
+          <path d="M0 20 C12 10 18 -4 10 -10 C2 -16 -4 -6 0 20Z" fill="#e91e63" opacity="0.85"/>
+          <path d="M0 20 C-16 16 -22 4 -16 -4 C-10 -12 -2 -4 0 20Z" fill="#f06292" opacity="0.8"/>
+          <path d="M0 20 C16 16 22 4 16 -4 C10 -12 2 -4 0 20Z" fill="#f06292" opacity="0.8"/>
+          <path d="M0 20 C-4 6 -10 -6 -4 -16 C2 -24 8 -14 0 20Z" fill="#ec407a"/>
+          <path d="M0 20 C4 6 10 -6 4 -16 C-2 -24 -8 -14 0 20Z" fill="#ec407a"/>
+          <!-- Center -->
+          <circle cx="0" cy="14" r="8" fill="#c62828"/>
+          <circle cx="0" cy="14" r="5" fill="#ff8a65"/>
+          <circle cx="0" cy="14" r="2" fill="#ffd54f"/>
+        </g>
+        <!-- Protea 2 (right, smaller) -->
+        <g transform="translate(420, 275) scale(0.75)">
+          <line x1="0" y1="80" x2="0" y2="20" stroke="#4a7c59" stroke-width="3" stroke-linecap="round"/>
+          <path d="M0 60 C-15 52 -18 40 -10 38" stroke="#4a7c59" stroke-width="2" fill="#6abf69" opacity="0.8"/>
+          <path d="M0 50 C12 42 16 30 8 28" stroke="#4a7c59" stroke-width="2" fill="#6abf69" opacity="0.8"/>
+          <path d="M0 20 C-12 10 -18 -4 -10 -10 C-2 -16 4 -6 0 20Z" fill="#e91e63" opacity="0.85"/>
+          <path d="M0 20 C12 10 18 -4 10 -10 C2 -16 -4 -6 0 20Z" fill="#e91e63" opacity="0.85"/>
+          <path d="M0 20 C-16 16 -22 4 -16 -4 C-10 -12 -2 -4 0 20Z" fill="#f06292" opacity="0.8"/>
+          <path d="M0 20 C16 16 22 4 16 -4 C10 -12 2 -4 0 20Z" fill="#f06292" opacity="0.8"/>
+          <path d="M0 20 C-4 6 -10 -6 -4 -16 C2 -24 8 -14 0 20Z" fill="#ec407a"/>
+          <path d="M0 20 C4 6 10 -6 4 -16 C-2 -24 -8 -14 0 20Z" fill="#ec407a"/>
+          <circle cx="0" cy="14" r="8" fill="#c62828"/>
+          <circle cx="0" cy="14" r="5" fill="#ff8a65"/>
+          <circle cx="0" cy="14" r="2" fill="#ffd54f"/>
+        </g>
+        <!-- Fynbos shrubs (centre) -->
+        <g transform="translate(200, 300)" opacity="0.9">
+          <line x1="0" y1="60" x2="-6" y2="20" stroke="#4a7c59" stroke-width="2"/>
+          <line x1="0" y1="60" x2="6" y2="15" stroke="#4a7c59" stroke-width="2"/>
+          <line x1="0" y1="60" x2="0" y2="10" stroke="#4a7c59" stroke-width="2"/>
+          <line x1="-6" y1="20" x2="-10" y2="10" stroke="#6abf69" stroke-width="1.5"/>
+          <line x1="-6" y1="20" x2="-3" y2="8" stroke="#6abf69" stroke-width="1.5"/>
+          <line x1="6" y1="15" x2="10" y2="5" stroke="#6abf69" stroke-width="1.5"/>
+          <line x1="6" y1="15" x2="3" y2="3" stroke="#6abf69" stroke-width="1.5"/>
+          <circle cx="-10" cy="8" r="4" fill="#ff7043" opacity="0.8"/>
+          <circle cx="-3" cy="6" r="3.5" fill="#ff7043" opacity="0.8"/>
+          <circle cx="10" cy="3" r="4" fill="#ff7043" opacity="0.8"/>
+          <circle cx="3" cy="1" r="3.5" fill="#ff8a65" opacity="0.8"/>
+          <circle cx="0" cy="8" r="4" fill="#ff5722" opacity="0.9"/>
+        </g>
+        <!-- Fynbos shrubs (right centre) -->
+        <g transform="translate(320, 295)" opacity="0.85">
+          <line x1="0" y1="55" x2="-5" y2="18" stroke="#388e3c" stroke-width="2"/>
+          <line x1="0" y1="55" x2="7" y2="12" stroke="#388e3c" stroke-width="2"/>
+          <line x1="0" y1="55" x2="-2" y2="8" stroke="#388e3c" stroke-width="2"/>
+          <circle cx="-8" cy="14" r="4.5" fill="#f9a825" opacity="0.85"/>
+          <circle cx="7" cy="9" r="4" fill="#f9a825" opacity="0.85"/>
+          <circle cx="-2" cy="5" r="3.5" fill="#fbc02d" opacity="0.9"/>
+        </g>
+        <!-- Birds -->
+        <path d="M160 130 Q165 125 170 130" stroke="#546e7a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M175 120 Q181 114 187 120" stroke="#546e7a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M300 100 Q306 94 312 100" stroke="#546e7a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Clouds -->
+        <ellipse cx="120" cy="70" rx="45" ry="16" fill="white" opacity="0.6"/>
+        <ellipse cx="140" cy="62" rx="30" ry="14" fill="white" opacity="0.6"/>
+        <ellipse cx="100" cy="68" rx="25" ry="12" fill="white" opacity="0.5"/>
+        <ellipse cx="290" cy="50" rx="35" ry="12" fill="white" opacity="0.5"/>
+        <ellipse cx="308" cy="44" rx="22" ry="11" fill="white" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section id="social-proof" aria-labelledby="quote-heading">
+  <p class="big-quote reveal" id="quote-heading">"The one you crack open when the braai's just right."</p>
+  <div class="rating-row reveal" style="transition-delay:0.15s">
+    <span class="stars" aria-label="5 stars">★★★★★</span>
+    <span class="rating-text">4.9/5 from 2,400+ South Africans</span>
+  </div>
+  <div class="insta-grid reveal" style="transition-delay:0.3s">
+    <!-- Tile 1: Sunset beach -->
+    <div class="insta-tile" aria-label="Instagram photo from @brooks.seltzer">
+      <div class="insta-tile-bg">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="t1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ff7043"/>
+              <stop offset="50%" stop-color="#ff8a65"/>
+              <stop offset="100%" stop-color="#0B6E6E"/>
+            </linearGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#t1)"/>
+          <ellipse cx="100" cy="105" rx="90" ry="4" fill="rgba(255,255,255,0.15)"/>
+          <ellipse cx="100" cy="112" rx="80" ry="3" fill="rgba(255,255,255,0.1)"/>
+          <circle cx="100" cy="80" r="22" fill="#fff176" opacity="0.8"/>
+          <circle cx="100" cy="80" r="18" fill="#ffee58" opacity="0.9"/>
+          <path d="M100 105 L100 200" stroke="#0B6E6E" stroke-width="60" opacity="0.4"/>
+          <!-- Silhouette figures -->
+          <rect x="60" y="150" width="6" height="35" fill="#222" opacity="0.6" rx="2"/>
+          <circle cx="63" cy="147" r="5" fill="#222" opacity="0.6"/>
+          <rect x="130" y="155" width="5" height="30" fill="#222" opacity="0.6" rx="2"/>
+          <circle cx="132" cy="152" r="4" fill="#222" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="insta-overlay">
+        <span class="insta-handle">@brooks.seltzer</span>
+      </div>
+    </div>
+    <!-- Tile 2: Mountain/forest -->
+    <div class="insta-tile" aria-label="Instagram photo from @brooks.seltzer">
+      <div class="insta-tile-bg">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="t2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#b2dfdb"/>
+              <stop offset="60%" stop-color="#4caf50"/>
+              <stop offset="100%" stop-color="#2e7d32"/>
+            </linearGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#t2)"/>
+          <path d="M0 160 L40 90 L80 140 L120 70 L160 120 L200 80 L200 200 L0 200 Z" fill="#1b5e20" opacity="0.9"/>
+          <path d="M0 180 Q50 170 100 178 Q150 186 200 174 L200 200 L0 200 Z" fill="#33691e"/>
+          <!-- Can on rock -->
+          <rect x="88" y="148" width="24" height="40" rx="4" fill="#0B6E6E"/>
+          <rect x="88" y="158" width="24" height="16" fill="#F4845F" opacity="0.9"/>
+          <ellipse cx="100" cy="148" rx="12" ry="3" fill="#0e8080"/>
+          <text x="100" y="169" text-anchor="middle" font-family="serif" font-size="7" fill="white" font-weight="bold">Brooks</text>
+        </svg>
+      </div>
+      <div class="insta-overlay">
+        <span class="insta-handle">@brooks.seltzer</span>
+      </div>
+    </div>
+    <!-- Tile 3: Beach/water -->
+    <div class="insta-tile" aria-label="Instagram photo from @brooks.seltzer">
+      <div class="insta-tile-bg">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="t3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#29b6f6"/>
+              <stop offset="55%" stop-color="#0288d1"/>
+              <stop offset="100%" stop-color="#e8c99a"/>
+            </linearGradient>
+          </defs>
+          <rect width="200" height="200" fill="url(#t3)"/>
+          <!-- Waves -->
+          <path d="M0 120 Q25 110 50 120 Q75 130 100 120 Q125 110 150 120 Q175 130 200 120 L200 200 L0 200 Z" fill="#0077b6" opacity="0.7"/>
+          <path d="M0 140 Q25 130 50 140 Q75 150 100 140 Q125 130 150 140 Q175 150 200 140 L200 200 L0 200 Z" fill="#e8c99a"/>
+          <!-- Cans in cooler box outline -->
+          <rect x="70" y="155" width="60" height="30" rx="4" fill="#f5f5f5" opacity="0.85"/>
+          <rect x="76" y="160" width="14" height="20" rx="2" fill="#0B6E6E"/>
+          <rect x="76" y="165" width="14" height="8" fill="#F4845F"/>
+          <rect x="94" y="160" width="14" height="20" rx="2" fill="#0B6E6E"/>
+          <rect x="94" y="165" width="14" height="8" fill="#7CB342"/>
+          <rect x="112" y="160" width="14" height="20" rx="2" fill="#0B6E6E"/>
+          <rect x="112" y="165" width="14" height="8" fill="#F06292"/>
+          <!-- Sun reflection -->
+          <path d="M90 100 L110 100" stroke="white" stroke-width="2" opacity="0.5"/>
+          <path d="M80 110 L120 110" stroke="white" stroke-width="1.5" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="insta-overlay">
+        <span class="insta-handle">@brooks.seltzer</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE TO BUY -->
+<section id="buy" aria-labelledby="buy-heading">
+  <div class="inner">
+    <p class="section-label">Available Now</p>
+    <h2 id="buy-heading">Find Brooks near you.</h2>
+    <div class="retailer-badges reveal">
+      <span class="retailer-badge">Checkers</span>
+      <span class="retailer-badge">Pick n Pay</span>
+      <span class="retailer-badge">Woolworths Food</span>
+      <span class="retailer-badge">Spar</span>
+    </div>
+    <a href="#" class="order-link reveal" style="transition-delay:0.1s">Or order online →</a>
+
+    <!-- South Africa Map SVG -->
+    <div class="sa-map-wrap reveal" style="transition-delay:0.2s" aria-label="Map of South Africa showing Brooks locations">
+      <svg viewBox="0 0 520 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="mapShadow">
+            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(11,110,110,0.2)"/>
+          </filter>
+        </defs>
+        <!-- South Africa outline (geographically accurate) -->
+        <path d="
+          M 68 52
+          L 68 115
+          L 30 165
+          L 22 205
+          L 30 240
+          L 50 270
+          L 80 300
+          L 105 335
+          L 100 355
+          L 85 370
+          L 90 388
+          L 110 400
+          L 120 418
+          L 108 432
+          L 118 442
+          L 145 448
+          L 175 438
+          L 195 448
+          L 210 455
+          L 225 450
+          L 242 455
+          L 258 448
+          L 278 440
+          L 300 448
+          L 310 440
+          L 325 430
+          L 340 418
+          L 350 395
+          L 365 370
+          L 385 345
+          L 395 320
+          L 415 290
+          L 435 260
+          L 452 230
+          L 462 200
+          L 470 170
+          L 465 145
+          L 455 120
+          L 448 100
+          L 430 80
+          L 418 68
+          L 405 60
+          L 385 55
+          L 370 48
+          L 360 42
+          L 342 38
+          L 320 42
+          L 290 38
+          L 265 30
+          L 240 32
+          L 215 28
+          L 190 30
+          L 168 35
+          L 148 38
+          L 128 42
+          L 108 45
+          L 88 48
+          Z
+        " fill="#E8F4F4" stroke="#0B6E6E" stroke-width="2" filter="url(#mapShadow)"/>
+
+        <!-- Lesotho enclave -->
+        <path d="M 330 310 L 345 295 L 365 290 L 378 302 L 370 320 L 355 332 L 338 328 Z" fill="#d0e8e8" stroke="#0B6E6E" stroke-width="1.2" opacity="0.7"/>
+
+        <!-- Eswatini -->
+        <path d="M 430 155 L 445 148 L 452 160 L 445 172 L 432 168 Z" fill="#d0e8e8" stroke="#0B6E6E" stroke-width="1" opacity="0.6"/>
+
+        <!-- Cape Town dot -->
+        <circle cx="125" cy="420" r="10" fill="#F4845F"/>
+        <circle cx="125" cy="420" r="6" fill="white"/>
+        <circle cx="125" cy="420" r="3" fill="#F4845F"/>
+        <text x="140" y="424" font-family="'DM Sans', sans-serif" font-size="12" fill="#0D2B2B" font-weight="600">Cape Town</text>
+
+        <!-- Johannesburg dot -->
+        <circle cx="330" cy="145" r="10" fill="#F4845F"/>
+        <circle cx="330" cy="145" r="6" fill="white"/>
+        <circle cx="330" cy="145" r="3" fill="#F4845F"/>
+        <text x="345" y="148" font-family="'DM Sans', sans-serif" font-size="12" fill="#0D2B2B" font-weight="600">Johannesburg</text>
+
+        <!-- Durban dot -->
+        <circle cx="420" cy="260" r="10" fill="#F4845F"/>
+        <circle cx="420" cy="260" r="6" fill="white"/>
+        <circle cx="420" cy="260" r="3" fill="#F4845F"/>
+        <text x="435" y="263" font-family="'DM Sans', sans-serif" font-size="12" fill="#0D2B2B" font-weight="600">Durban</text>
+
+        <!-- Gqeberha dot -->
+        <circle cx="300" cy="400" r="10" fill="#F4845F"/>
+        <circle cx="300" cy="400" r="6" fill="white"/>
+        <circle cx="300" cy="400" r="3" fill="#F4845F"/>
+        <text x="210" y="395" font-family="'DM Sans', sans-serif" font-size="12" fill="#0D2B2B" font-weight="600">Gqeberha</text>
+
+        <!-- Ripple lines from Cape Town -->
+        <circle cx="125" cy="420" r="18" stroke="#F4845F" stroke-width="1" opacity="0.3" fill="none"/>
+        <circle cx="125" cy="420" r="26" stroke="#F4845F" stroke-width="1" opacity="0.2" fill="none"/>
+        <!-- Ripple lines from Johannesburg -->
+        <circle cx="330" cy="145" r="18" stroke="#F4845F" stroke-width="1" opacity="0.3" fill="none"/>
+        <circle cx="330" cy="145" r="26" stroke="#F4845F" stroke-width="1" opacity="0.2" fill="none"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter" aria-labelledby="newsletter-heading">
+  <p class="section-label" style="color: var(--coral); letter-spacing: 0.15em; text-transform: uppercase; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;">Stay in the loop</p>
+  <h2 id="newsletter-heading">Join the Brooks crew.</h2>
+  <p>No spam. Just good vibes and new flavour drops.</p>
+  <form class="newsletter-form" onsubmit="handleSubscribe(event)" novalidate>
+    <input type="email" placeholder="your@email.com" aria-label="Email address" required>
+    <button type="submit">Subscribe</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <!-- Wave decoration -->
+  <svg class="footer-wave" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M0 30 Q180 0 360 30 Q540 60 720 30 Q900 0 1080 30 Q1260 60 1440 30 L1440 0 L0 0 Z" fill="#0B6E6E" opacity="0.15"/>
+    <path d="M0 40 Q180 10 360 40 Q540 70 720 40 Q900 10 1080 40 Q1260 70 1440 40 L1440 0 L0 0 Z" fill="#0B6E6E" opacity="0.08"/>
+  </svg>
+
+  <div class="footer-inner">
+    <a href="#hero" class="footer-logo" aria-label="Brooks Hard Seltzer">
+      <img src="brooks photos/brookslogo.png" alt="Brooks Hard Seltzer">
+    </a>
+    <ul class="footer-links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <p class="footer-copy">
+    © 2025 Brooks Hard Seltzer. All rights reserved.<br>
+    Enjoy Brooks responsibly. Not for sale to persons under the age of 18.<br>
+    <strong style="opacity:0.4">Drink responsibly. Don't drink and drive.</strong>
+  </p>
+</footer>
+
+<script>
+// ─── AGE GATE ───
+const gate = document.getElementById('age-gate');
+const sorry = document.getElementById('age-sorry');
+
+document.getElementById('age-yes').addEventListener('click', () => {
+  gate.classList.add('hidden');
+  setTimeout(() => gate.style.display = 'none', 700);
+  sessionStorage.setItem('ageVerified', 'true');
+});
+
+document.getElementById('age-no').addEventListener('click', () => {
+  sorry.style.display = 'block';
+});
+
+if (sessionStorage.getItem('ageVerified')) {
+  gate.style.display = 'none';
+}
+
+// ─── NAV SCROLL ───
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// ─── HAMBURGER ───
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+
+hamburger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('open', isOpen);
+  hamburger.setAttribute('aria-expanded', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+function closeMobile() {
+  mobileMenu.classList.remove('open');
+  hamburger.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+// ─── HERO ANIMATIONS ───
+window.addEventListener('load', () => {
+  const words = document.querySelectorAll('.hero-headline .word');
+  words.forEach(word => {
+    const delay = parseInt(word.dataset.delay) || 0;
+    setTimeout(() => word.classList.add('visible'), 300 + delay);
+  });
+  setTimeout(() => document.querySelector('.hero-sub').classList.add('visible'), 300);
+  setTimeout(() => document.querySelector('.hero-buttons').classList.add('visible'), 300);
+});
+
+// ─── BUBBLES ───
+const bubblesContainer = document.getElementById('bubbles-container');
+function createBubble() {
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  const size = 4 + Math.random() * 18;
+  const left = Math.random() * 100;
+  const duration = 6 + Math.random() * 10;
+  const delay = Math.random() * 6;
+  b.style.cssText = `
+    width: ${size}px; height: ${size}px;
+    left: ${left}%;
+    animation-duration: ${duration}s;
+    animation-delay: ${delay}s;
+  `;
+  bubblesContainer.appendChild(b);
+}
+for (let i = 0; i < 28; i++) createBubble();
+
+// ─── INTERSECTION OBSERVER ───
+const revealEls = document.querySelectorAll('.reveal, .feature-tile');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// Stagger flavour cards
+document.querySelectorAll('.flavour-card').forEach((card, i) => {
+  card.style.transitionDelay = `${i * 0.1}s`;
+});
+
+// ─── FLAVOUR SCROLL: dots + scale effect ───
+const flavoursRow = document.querySelector('.flavours-row');
+const flavourCards = document.querySelectorAll('.flavour-card');
+const flavourDots = document.querySelectorAll('.flavour-dot');
+
+function updateFlavourScroll() {
+  const scrollLeft = flavoursRow.scrollLeft;
+
+  // Update dots
+  let closestIdx = 0;
+  let closestDist = Infinity;
+  flavourCards.forEach((card, i) => {
+    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+    const viewCenter = scrollLeft + flavoursRow.clientWidth / 2;
+    const d = Math.abs(cardCenter - viewCenter);
+    if (d < closestDist) { closestDist = d; closestIdx = i; }
+  });
+  flavourDots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === closestIdx);
+  });
+}
+
+flavoursRow.addEventListener('scroll', updateFlavourScroll, { passive: true });
+
+// Dot click scrolls to card
+flavourDots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const idx = parseInt(dot.dataset.index);
+    const card = flavourCards[idx];
+    const scrollTo = card.offsetLeft - (flavoursRow.clientWidth - card.offsetWidth) / 2;
+    flavoursRow.scrollTo({ left: scrollTo, behavior: 'smooth' });
+  });
+});
+
+// Initial state after layout
+requestAnimationFrame(() => {
+  // Center the first card
+  const firstCard = flavourCards[0];
+  if (firstCard) {
+    flavoursRow.scrollLeft = firstCard.offsetLeft - (flavoursRow.clientWidth - firstCard.offsetWidth) / 2;
+  }
+  updateFlavourScroll();
+});
+
+// ─── FLAVOUR SECTION BUBBLES ───
+const flavourBubbles = document.getElementById('flavour-bubbles');
+for (let i = 0; i < 20; i++) {
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  const size = 4 + Math.random() * 16;
+  b.style.cssText = `
+    width: ${size}px; height: ${size}px;
+    left: ${Math.random() * 100}%;
+    animation-duration: ${7 + Math.random() * 12}s;
+    animation-delay: ${Math.random() * 8}s;
+  `;
+  flavourBubbles.appendChild(b);
+}
+
+// ─── PARALLAX ON STORY ILLUSTRATION ───
+const storyIllustration = document.getElementById('story-svg');
+if (storyIllustration) {
+  window.addEventListener('scroll', () => {
+    const rect = storyIllustration.closest('section').getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+      const offset = (progress - 0.5) * 40;
+      storyIllustration.style.transform = `translateY(${offset}px)`;
+    }
+  }, { passive: true });
+}
+
+// ─── CAN MOVEMENT (mouse reactive) ───
+const can3d = document.getElementById('can-3d');
+const heroSection = document.getElementById('hero');
+
+let moveTargetX = 0, moveTargetY = 0;
+let moveCurrentX = 0, moveCurrentY = 0;
+
+heroSection.addEventListener('mousemove', (e) => {
+  const rect = heroSection.getBoundingClientRect();
+  const cx = rect.left + rect.width * 0.85;
+  const cy = rect.top + rect.height * 0.5;
+
+  const dx = (e.clientX - cx) / (rect.width * 0.3);
+  const dy = (e.clientY - cy) / (rect.height * 0.5);
+
+  moveTargetX = Math.max(-40, Math.min(40, dx * 40));
+  moveTargetY = Math.max(-30, Math.min(30, dy * 30));
+}, { passive: true });
+
+heroSection.addEventListener('mouseleave', () => {
+  moveTargetX = 0;
+  moveTargetY = 0;
+});
+
+// Mobile gyroscope support
+if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
+  // iOS 13+ requires permission
+} else if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', (e) => {
+    const gamma = e.gamma || 0;
+    const beta  = e.beta  || 0;
+    moveTargetX = Math.max(-30, Math.min(30, gamma * 0.6));
+    moveTargetY = Math.max(-20, Math.min(20, (beta - 45) * 0.4));
+  }, { passive: true });
+}
+
+// Animation loop: lerp translate + bob
+function canAnimLoop(timestamp) {
+  moveCurrentX += (moveTargetX - moveCurrentX) * 0.12;
+  moveCurrentY += (moveTargetY - moveCurrentY) * 0.12;
+
+  const bob = Math.sin(timestamp * 0.00075 * Math.PI * 2) * 10;
+
+  if (can3d) {
+    can3d.style.transform =
+      `translateX(${moveCurrentX.toFixed(2)}px) translateY(${(moveCurrentY + bob).toFixed(2)}px)`;
+  }
+  requestAnimationFrame(canAnimLoop);
+}
+requestAnimationFrame(canAnimLoop);
+
+// ─── NEWSLETTER ───
+function handleSubscribe(e) {
+  e.preventDefault();
+  const input = e.target.querySelector('input[type="email"]');
+  const btn = e.target.querySelector('button');
+  if (input.value && input.validity.valid) {
+    btn.textContent = 'You\'re in! 🌊';
+    btn.style.background = '#0B6E6E';
+    input.value = '';
+    input.disabled = true;
+    btn.disabled = true;
+  }
+}
+</script>
+</body>
+</html>
