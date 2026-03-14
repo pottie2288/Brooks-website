@@ -852,8 +852,10 @@ footer {
     right: auto;
   }
   .hero-can-img {
-    max-height: 420px; /* 1.5x increase from previous 280px */
-    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2));
+    max-height: 420px;
+    filter: none !important; /* Clear desktop light blue glow */
+    -webkit-filter: drop-shadow(0 15px 30px rgba(0,0,0,0.25));
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.25));
   }
   .can-anchor::after {
     display: none;
