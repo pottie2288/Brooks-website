@@ -1656,6 +1656,8 @@ let moveTargetX = 0, moveTargetY = 0;
 let moveCurrentX = 0, moveCurrentY = 0;
 
 heroSection.addEventListener('mousemove', (e) => {
+  if (window.innerWidth <= 900) return; // Disable tilt on mobile
+
   const rect = heroSection.getBoundingClientRect();
   const cx = rect.left + rect.width * 0.85;
   const cy = rect.top + rect.height * 0.5;
@@ -1677,6 +1679,8 @@ if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requ
   // iOS 13+ requires permission
 } else if (window.DeviceOrientationEvent) {
   window.addEventListener('deviceorientation', (e) => {
+    if (window.innerWidth <= 900) return; // Disable gyro on mobile
+
     const gamma = e.gamma || 0;
     const beta  = e.beta  || 0;
     moveTargetX = Math.max(-30, Math.min(30, gamma * 0.6));
