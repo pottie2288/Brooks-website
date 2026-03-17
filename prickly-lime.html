@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prickly Lime | Brooks Hard Seltzer</title>
+  <meta name="description" content="Brooks Prickly Lime — Zesty, tangy, adventurous hard seltzer.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+
+  <style>
+    :root {
+      --teal: #0B6E6E;
+      --coral: #F4845F;
+      --light: #E8F4F4;
+      --dark: #0D2B2B;
+      --white: #FAFCFC;
+      --accent: #5a8c1e;
+      --accent-light: #b5d96a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+    body { font-family: 'DM Sans', sans-serif; overflow-x: hidden; background: var(--white); color: var(--dark); }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; }
+    :focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+      33%      { transform: translateY(-18px) rotate(4deg) scale(1.05); }
+      66%      { transform: translateY(-8px) rotate(-3deg) scale(.97); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      50%      { transform: translateX(-50%) translateY(8px); opacity: .5; }
+    }
+    .page-transition-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000; opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .page-transition-overlay.active { opacity: 1; pointer-events: all; }
+    .particle {
+      position: absolute;
+      animation: float 6s ease-in-out infinite;
+      pointer-events: none; user-select: none;
+    }
+    .particle-circle {
+      display: block; width: 100%; height: 100%;
+      border-radius: 50%;
+    }
+
+    .site-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.6rem 5%;
+      transition: background .4s, padding .4s;
+    }
+    .site-nav.solid {
+      background: rgba(250,252,252,.94);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      padding: 1rem 5%;
+      box-shadow: 0 2px 24px rgba(13,43,43,.07);
+    }
+    .nav-logo { display: inline-flex; align-items: center; }
+    .nav-logo img { height: 72px; width: auto; display: block; }
+    @media (max-width: 768px) { .nav-logo img { height: 56px; } }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: .88rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+      color: #fff; position: relative; display: inline-block;
+      transition: color .3s, transform .3s;
+    }
+    .nav-links a:hover { transform: translateY(-2px); }
+    .nav-links a:not(.nav-cta)::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 100%; height: 2px; background: #fff; border-radius: 2px;
+      transform: scaleX(0); transform-origin: left center;
+      transition: transform .35s cubic-bezier(.25,.46,.45,.94);
+    }
+    .nav-links a:not(.nav-cta):hover::after { transform: scaleX(1); }
+    .nav-links a:not(.nav-cta):not(:hover)::after { transform: scaleX(0); transform-origin: right center; }
+    .site-nav.solid .nav-links a { color: var(--dark); }
+    .site-nav.solid .nav-links a:not(.nav-cta)::after { background: var(--teal); }
+    .site-nav.solid .nav-links a:hover { color: var(--teal); }
+    .nav-cta {
+      padding: .7rem 1.8rem; background: rgba(255,255,255,.2) !important;
+      color: #fff !important; border-radius: 9999px;
+      backdrop-filter: blur(8px);
+      transition: background .3s, transform .3s, box-shadow .3s !important;
+    }
+    .nav-cta:hover {
+      background: var(--coral) !important;
+      transform: translateY(0) scale(1.04) !important;
+      box-shadow: 0 0 0 4px rgba(244,132,95,.2), 0 8px 24px rgba(244,132,95,.35) !important;
+    }
+    .site-nav.solid .nav-cta { background: var(--teal) !important; color: #fff !important; }
+    .site-nav.solid .nav-cta:hover { background: var(--coral) !important; }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; width: 36px; height: 36px;
+      background: none; border: none; cursor: pointer; padding: 4px; z-index: 1100;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px; background: #fff;
+      border-radius: 2px; transition: transform .35s ease, opacity .3s ease, width .3s ease;
+      transform-origin: center;
+    }
+    .site-nav.solid .nav-hamburger span { background: var(--dark); }
+    .nav-hamburger.open span { background: #fff !important; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile-drawer {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(160deg, var(--teal) 0%, #0a9a8a 50%, var(--light) 100%);
+      z-index: 999; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2rem;
+      opacity: 0; pointer-events: none; transition: opacity .4s ease;
+    }
+    .nav-mobile-drawer.open { opacity: 1; pointer-events: all; }
+    .nav-mobile-drawer a {
+      font-size: clamp(1.5rem,8vw,2.5rem); font-weight: 800;
+      font-family: 'Fraunces', serif;
+      letter-spacing: -.02em; text-transform: uppercase; color: #fff;
+      transition: color .2s, transform .2s;
+    }
+    .nav-mobile-drawer a:hover { color: var(--coral); transform: translateX(6px); }
+    .nav-mobile-drawer .drawer-cta {
+      margin-top: .5rem; padding: 1rem 3rem;
+      background: #fff; color: var(--teal);
+      border-radius: 9999px; font-size: 1rem; font-weight: 700; letter-spacing: .1em;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .nav-mobile-drawer .drawer-cta:hover { background: var(--coral); color: #fff; transform: none; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    @media (max-width: 768px) {
+      .flavour-section { height: auto !important; min-height: 100vh; }
+      #s1-hero { padding-top: 120px; padding-bottom: 4rem; }
+      #s2-parallax { padding-top: 120px; padding-bottom: 4rem; }
+      #s2-parallax .s2-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      #s2-parallax .s2-can { height: 40vh !important; }
+      #s2-parallax .nutrition-label { order: 3; }
+      .s2-deco-can { display: none !important; }
+      #s4-mood { padding-top: 120px; padding-bottom: 4rem; }
+    }
+
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,.06);
+      position: relative; overflow: hidden;
+    }
+    .footer-wave { display: block; width: 100%; margin-bottom: -2px; }
+    .footer-inner {
+      padding: 3rem 2rem 2rem; max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 2rem;
+    }
+    .footer-logo { display: flex; align-items: center; }
+    .footer-logo img { height: 80px; width: auto; }
+    .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; list-style: none; }
+    .footer-links a { color: rgba(255,255,255,.45); font-size: .85rem; transition: color .2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-copy {
+      width: 100%; text-align: center; color: rgba(255,255,255,.25);
+      font-size: .78rem; padding-bottom: 2rem; line-height: 1.7;
+    }
+
+    .nutrition-label {
+      background: rgba(255,255,255,.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.3); border-radius: 1.5rem;
+      padding: 2rem; max-width: 380px; color: var(--dark);
+      box-shadow: 0 8px 32px rgba(0,0,0,.05); will-change: transform, opacity;
+    }
+    .nutrition-header { border-bottom: 2px solid var(--dark); padding-bottom: .75rem; margin-bottom: 1rem; }
+    .nutrition-title { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -.02em; }
+    .nutrition-subtitle { font-size: .75rem; font-weight: 600; opacity: .7; }
+    .nutrition-row { display: flex; justify-content: space-between; padding: .4rem 0; border-bottom: 1px solid rgba(13,43,43,.1); font-size: .9rem; }
+    .nutrition-row span:first-child { font-weight: 700; }
+    .ingredients-box { margin-top: 1.5rem; }
+    .ingredients-title { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; color: var(--accent); }
+    .ingredients-list { font-size: .75rem; line-height: 1.5; font-weight: 400; opacity: .8; }
+    @media (max-width: 768px) { .nutrition-label { max-width: 100%; margin-top: 2rem; } }
+  </style>
+</head>
+<body>
+  <div class="page-transition-overlay" id="page-transition-overlay"></div>
+
+  <div class="nav-mobile-drawer" id="nav-drawer">
+    <a href="index.html" class="drawer-link">Home</a>
+    <a href="index.html#story" class="drawer-link">Our Story</a>
+    <a href="index.html#flavours" class="drawer-link">Flavours</a>
+    <a href="index.html#buy" class="drawer-link">Where to Buy</a>
+    <a href="#" class="drawer-cta">Shop Online</a>
+  </div>
+
+  <nav class="site-nav" id="site-nav">
+    <a href="index.html" class="nav-logo"><img src="brooks photos/brookslogo.png" alt="Brooks Hard Seltzer"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">← Back</a></li>
+      <li><a href="index.html#story">Our Story</a></li>
+      <li><a href="index.html#flavours">Flavours</a></li>
+      <li><a href="index.html#buy">Where to Buy</a></li>
+      <li><a href="#" class="nav-cta">Shop Online</a></li>
+    </ul>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section id="s1-hero" class="flavour-section" style="background: linear-gradient(135deg, #5a8c1e 0%, #b5d96a 100%); overflow: hidden; position: relative; height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="particles" aria-hidden="true">
+      <span class="particle" style="left:8%;top:15%;width:200px;height:200px;animation-duration:6s;animation-delay:0s;"><img src="brooks photos/fruit/12.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="particle" style="left:85%;top:20%;width:144px;height:144px;animation-duration:7s;animation-delay:1s;"><img src="brooks photos/fruit/11.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="particle" style="left:15%;top:70%;width:220px;height:220px;animation-duration:5s;animation-delay:.5s;"><img src="brooks photos/fruit/12.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="particle" style="left:75%;top:65%;width:168px;height:168px;animation-duration:8s;animation-delay:1.5s;"><img src="brooks photos/fruit/11.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="particle" style="left:50%;top:10%;width:120px;height:120px;animation-duration:6.5s;animation-delay:2s;"><img src="brooks photos/fruit/12.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="particle" style="left:30%;top:80%;width:176px;height:176px;animation-duration:7.5s;animation-delay:.8s;"><img src="brooks photos/fruit/11.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="particle" style="left:90%;top:45%;width:136px;height:136px;animation-duration:5.5s;animation-delay:2.5s;"><img src="brooks photos/fruit/12.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="particle" style="left:5%;top:45%;width:192px;height:192px;animation-duration:9s;animation-delay:1.2s;"><img src="brooks photos/fruit/11.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+    </div>
+
+    <div class="hero-content" style="text-align:center; position:relative; z-index:2;">
+      <div class="hero-can-wrap" style="will-change:transform;">
+        <img src="brooks photos/5.png" alt="Brooks Prickly Lime can" class="hero-can" style="height:55vh; max-height:500px; width:auto; will-change:transform; display:block; margin:0 auto;">
+      </div>
+      <div class="hero-title-wrap">
+        <h1 class="hero-title" style="font-family:'Fraunces',serif; font-size:clamp(2.5rem,10vw,9rem); font-weight:900; letter-spacing:-.04em; color:#fff; text-transform:uppercase; line-height:.9; margin:.5rem 0; will-change:transform;">PRICKLY LIME</h1>
+      </div>
+      <p class="hero-tagline" style="font-size:clamp(1rem,2vw,1.4rem); font-weight:300; color:rgba(255,255,255,.85); letter-spacing:.15em; text-transform:uppercase; will-change:transform;">Zesty, tangy, adventurous.</p>
+    </div>
+
+    <div class="scroll-cue" style="position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); color:#fff; font-size:1.5rem; animation:scrollPulse 1.8s ease-in-out infinite;" aria-hidden="true">↓</div>
+  </section>
+
+  <!-- PARALLAX -->
+  <section id="s2-parallax" class="flavour-section" style="height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; background:#f0f8e4;">
+    <div class="s2-bg-shape" style="position:absolute; width:60vmin; height:60vmin; border-radius:50%; background:rgba(90,140,30,.12); top:50%; left:30%; transform:translate(-50%,-50%); will-change:transform;"></div>
+    <img src="brooks photos/5.png" alt="" class="s2-deco-can" aria-hidden="true" style="position:absolute; right:-5%; top:50%; transform:translateY(-50%); height:80vh; width:auto; opacity:.12; will-change:transform; pointer-events:none;">
+
+    <div class="s2-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; max-width:1200px; padding:0 5%; width:100%;">
+      <div style="display:flex; justify-content:center;">
+        <img src="brooks photos/5.png" alt="" class="s2-can" aria-hidden="true" style="height:60vh; max-height:520px; width:auto; will-change:transform; display:block;">
+      </div>
+      <div class="s2-text">
+        <div class="s2-word-1" style="font-family:'Fraunces',serif; font-size:clamp(2.5rem,6vw,5.5rem); font-weight:900; color:#5a8c1e; letter-spacing:-.03em; line-height:1; will-change:transform;">Zesty.</div>
+        <div class="s2-word-2" style="font-family:'Fraunces',serif; font-size:clamp(2.5rem,6vw,5.5rem); font-weight:900; color:#5a8c1e; letter-spacing:-.03em; line-height:1; will-change:transform;">Tangy.</div>
+        <div class="s2-word-3" style="font-family:'Fraunces',serif; font-size:clamp(2.5rem,6vw,5.5rem); font-weight:900; color:#5a8c1e; letter-spacing:-.03em; line-height:1; margin-bottom:2rem; will-change:transform;">Bold.</div>
+
+        <div class="nutrition-label">
+          <div class="nutrition-header">
+            <div class="nutrition-title">Nutrition</div>
+            <div class="nutrition-subtitle">Approximate per 355ml can</div>
+          </div>
+          <div class="nutrition-row"><span>Calories</span><span>~90 cal</span></div>
+          <div class="nutrition-row"><span>Alcohol (ABV)</span><span>4.5%</span></div>
+          <div class="nutrition-row"><span>Sugar</span><span>0g</span></div>
+          <div class="nutrition-row"><span>Carbs</span><span>Low / 0g</span></div>
+          <div class="nutrition-row"><span>Fat</span><span>0g</span></div>
+          <div class="nutrition-row"><span>Protein</span><span>0g</span></div>
+          <div class="nutrition-row"><span>Vitamin C</span><span>Added</span></div>
+          <div class="ingredients-box">
+            <div class="ingredients-title">Ingredients</div>
+            <div class="ingredients-list">Sparkling Water, Alcohol from Natural Fermentation, Natural Prickly Pear &amp; Lime Flavouring, Citric Acid, Ascorbic Acid (Vitamin C).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOOD -->
+  <section id="s4-mood" class="flavour-section" style="height:100vh; display:flex; align-items:center; justify-content:center; background:#1a3e0a; overflow:hidden; position:relative;">
+    <div aria-hidden="true">
+      <span class="mood-particle" style="position:absolute; left:10%; top:20%; width:180px; height:180px; opacity:.25;"><img src="brooks photos/fruit/12.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="mood-particle" style="position:absolute; right:12%; top:30%; width:140px; height:140px; opacity:.18;"><img src="brooks photos/fruit/11.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="mood-particle" style="position:absolute; left:25%; bottom:20%; width:220px; height:220px; opacity:.22;"><img src="brooks photos/fruit/12.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="mood-particle" style="position:absolute; right:25%; bottom:25%; width:160px; height:160px; opacity:.15;"><img src="brooks photos/fruit/11.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="mood-particle" style="position:absolute; left:55%; top:15%; width:120px; height:120px; opacity:.20;"><img src="brooks photos/fruit/12.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+      <span class="mood-particle" style="position:absolute; right:5%; bottom:40%; width:200px; height:200px; opacity:.14;"><img src="brooks photos/fruit/11.png" alt="" style="width:100%;height:100%;object-fit:contain;"></span>
+    </div>
+
+    <div class="mood-content" style="text-align:center; position:relative; z-index:2; padding:0 5%;">
+      <p class="mood-quote" style="font-family:'Fraunces',serif; font-size:clamp(2.5rem,7vw,8rem); font-weight:900; line-height:1.05; color:#b5d96a; letter-spacing:-.04em; max-width:900px; margin:0 auto; will-change:transform;">"The bold one<br>with a bite."</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="s5-cta" style="background:var(--white); padding:clamp(5rem,10vw,10rem) 5%;">
+    <div style="max-width:1000px; margin:0 auto; text-align:center;">
+      <h2 class="cta-heading" style="font-family:'Fraunces',serif; font-size:clamp(2rem,5vw,4rem); font-weight:900; color:var(--dark); letter-spacing:-.04em; margin-bottom:3rem;">Get Your Hands On It</h2>
+
+      <div style="display:flex; gap:1.25rem; justify-content:center; flex-wrap:wrap; margin-bottom:6rem;">
+        <a href="index.html#buy" class="cta-btn" style="display:inline-block; padding:1rem 2.5rem; background:#5a8c1e; color:#fff; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; border-radius:9999px; transition:transform .3s,box-shadow .3s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 12px 30px rgba(0,0,0,.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">Find a Store</a>
+        <a href="index.html#flavours" class="cta-btn" style="display:inline-block; padding:1rem 2.5rem; background:transparent; color:var(--dark); font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; border-radius:9999px; border:2px solid var(--dark); transition:transform .3s,background .3s,color .3s;" onmouseover="this.style.transform='translateY(-3px)';this.style.background='var(--dark)';this.style.color='#fff'" onmouseout="this.style.transform='';this.style.background='transparent';this.style.color='var(--dark)'">All Flavours</a>
+      </div>
+
+      <p style="font-size:.85rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase; color:var(--teal); margin-bottom:2rem;">Explore More Flavours</p>
+
+      <style>
+        .other-flavours-row{display:flex;gap:2rem;margin:0 auto;padding:0 3rem;justify-content:center;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+        .other-flavours-row::-webkit-scrollbar{display:none}
+        .other-flavours-row .of-card{flex:0 0 230px;border-radius:1.25rem;overflow:hidden;text-decoration:none;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.07);transition:transform .4s cubic-bezier(.25,.46,.45,.94),box-shadow .4s;display:flex;flex-direction:column;scroll-snap-align:center}
+        .other-flavours-row .of-card:hover{transform:translateY(-10px);box-shadow:0 16px 40px rgba(0,0,0,.12)}
+        .of-card-img{padding:2rem 1.5rem 1.5rem;text-align:center;flex:1;display:flex;align-items:center;justify-content:center}
+        .of-card-img img{height:180px;width:auto;display:block;transition:transform .4s}
+        .of-card:hover .of-card-img img{transform:scale(1.05)}
+        .of-card-label{padding:.85rem 1rem;text-align:center;color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}
+        @media(max-width:900px){.other-flavours-row{padding:0 1.5rem;gap:1.25rem}.other-flavours-row .of-card{flex:0 0 180px}.of-card-img img{height:150px}}
+      </style>
+      <div class="other-flavours-row">
+        <a href="strawberry-kiwi.html" class="of-card">
+          <div class="of-card-img"><img src="brooks photos/1.png" alt="Brooks Strawberry Kiwi"></div>
+          <div class="of-card-label" style="background:linear-gradient(135deg,#e8354d,#ff8fa3);">Strawberry Kiwi</div>
+        </a>
+        <a href="dragon-granadilla.html" class="of-card">
+          <div class="of-card-img"><img src="brooks photos/2.png" alt="Brooks Dragon Granadilla"></div>
+          <div class="of-card-label" style="background:linear-gradient(135deg,#7b2d8e,#d4a5ff);">Dragon Granadilla</div>
+        </a>
+        <a href="watermelon.html" class="of-card">
+          <div class="of-card-img"><img src="brooks photos/3.png" alt="Brooks Watermelon"></div>
+          <div class="of-card-label" style="background:linear-gradient(135deg,#2d8f4e,#7dcea0);">Watermelon</div>
+        </a>
+        <a href="mango-marula.html" class="of-card">
+          <div class="of-card-img"><img src="brooks photos/4.png" alt="Brooks Mango Marula"></div>
+          <div class="of-card-label" style="background:linear-gradient(135deg,#c4850a,#ffd666);">Mango Marula</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <svg class="footer-wave" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M0 30 Q180 0 360 30 Q540 60 720 30 Q900 0 1080 30 Q1260 60 1440 30 L1440 0 L0 0 Z" fill="#0B6E6E" opacity="0.15"/>
+      <path d="M0 40 Q180 10 360 40 Q540 70 720 40 Q900 10 1080 40 Q1260 70 1440 40 L1440 0 L0 0 Z" fill="#0B6E6E" opacity="0.08"/>
+    </svg>
+    <div class="footer-inner">
+      <a href="index.html" class="footer-logo" aria-label="Brooks Hard Seltzer">
+        <img src="brooks photos/brookslogo.png" alt="Brooks Hard Seltzer">
+      </a>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <p class="footer-copy">
+      © 2025 Brooks Hard Seltzer. All rights reserved.<br>
+      Enjoy Brooks responsibly. Not for sale to persons under the age of 18.<br>
+      <strong style="opacity:0.4">Drink responsibly. Don't drink and drive.</strong>
+    </p>
+  </footer>
+
+  <script>
+    const navEl = document.getElementById('site-nav');
+    const hamburgerBtn = document.getElementById('nav-hamburger');
+    const mobileDrawer = document.getElementById('nav-drawer');
+
+    function updateNav() { navEl.classList.toggle('solid', window.scrollY > 80); }
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+
+    hamburgerBtn.addEventListener('click', () => {
+      const isOpen = hamburgerBtn.classList.toggle('open');
+      mobileDrawer.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    mobileDrawer.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburgerBtn.classList.remove('open');
+        mobileDrawer.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({ duration: 1.3, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    const isMobile = window.innerWidth < 768;
+
+    function splitToChars(el) {
+      const words = el.textContent.trim().split(' ');
+      el.innerHTML = words.map(word =>
+        `<span class="word-wrap" style="display:inline-block;overflow:hidden;margin-right:.15em"><span class="word" style="display:inline-block">${
+          word.split('').map(c => `<span class="char" style="display:inline-block">${c}</span>`).join('')
+        }</span></span>`
+      ).join('');
+      return el.querySelectorAll('.char');
+    }
+
+    const heroTitle = document.querySelector('.hero-title');
+    const chars = splitToChars(heroTitle);
+
+    const entranceTl = gsap.timeline({ delay: 0.3 });
+    entranceTl
+      .from('.hero-can', { scale: 0.6, opacity: 0, duration: 1.2, ease: 'power3.out' })
+      .from(chars, { y: '100%', opacity: 0, stagger: 0.03, duration: 0.7, ease: 'power3.out' }, 0.2)
+      .from('.hero-tagline', { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.6)
+      .from('.scroll-cue', { opacity: 0, duration: 0.6 }, 1.0);
+
+    const heroOutTl = gsap.timeline();
+    heroOutTl
+      .to('.hero-can', { scale: 1.1, y: '-15vh', ease: 'none' }, 0)
+      .to('.hero-title-wrap', { y: '-20vh', opacity: 0, ease: 'none' }, 0)
+      .to('.hero-tagline', { y: '-10vh', opacity: 0, ease: 'none' }, 0)
+      .to('.scroll-cue', { opacity: 0, ease: 'none' }, 0);
+
+    ScrollTrigger.create({ trigger: '#s1-hero', start: 'top top', end: '+=180vh', pin: !isMobile, scrub: 1, animation: heroOutTl });
+
+    const s2Tl = gsap.timeline();
+    s2Tl
+      .from('.s2-can', { x: -60, opacity: 0, ease: 'none' }, 0)
+      .to('.s2-bg-shape', { rotation: 45, ease: 'none' }, 0)
+      .to('#s2-parallax', { backgroundColor: '#f5fae8', ease: 'none' }, 0)
+      .from('.s2-word-1', { x: 120, opacity: 0, ease: 'none' }, 0.1)
+      .from('.s2-word-2', { x: 120, opacity: 0, ease: 'none' }, 0.35)
+      .from('.s2-word-3', { x: 120, opacity: 0, ease: 'none' }, 0.6)
+      .from('.nutrition-label', { y: 40, opacity: 0, ease: 'power2.out' }, 0.8)
+      .from('.s2-deco-can', { opacity: 0, x: 100, ease: 'none' }, 0.1);
+
+    ScrollTrigger.create({ trigger: '#s2-parallax', start: 'top top', end: isMobile ? '+=0' : '+=200vh', pin: !isMobile, scrub: isMobile ? false : 1.2, animation: isMobile ? undefined : s2Tl, toggleActions: isMobile ? 'play none none reverse' : undefined, onEnter: isMobile ? () => s2Tl.play() : undefined });
+
+    const s4Tl = gsap.timeline();
+    s4Tl
+      .from('.mood-quote', { scale: 0.85, opacity: 0, ease: 'none' }, 0)
+      .from('.mood-particle', { y: 60, opacity: 0, stagger: 0.1, ease: 'none' }, 0);
+
+    ScrollTrigger.create({ trigger: '#s4-mood', start: 'top top', end: isMobile ? '+=0' : '+=180vh', pin: !isMobile, scrub: isMobile ? false : 1, animation: isMobile ? undefined : s4Tl, toggleActions: isMobile ? 'play none none reverse' : undefined, onEnter: isMobile ? () => s4Tl.play() : undefined });
+
+    gsap.from('.cta-heading', { scrollTrigger: { trigger: '.cta-heading', start: 'top 80%', toggleActions: 'play none none reverse' }, y: 40, opacity: 0, duration: 0.8, ease: 'power3.out' });
+    gsap.from('.cta-btn', { scrollTrigger: { trigger: '.cta-btn', start: 'top 85%', toggleActions: 'play none none reverse' }, y: 20, opacity: 0, stagger: 0.15, duration: 0.6, ease: 'power3.out' });
+    gsap.from('.flavour-teaser', { scrollTrigger: { trigger: '.flavour-teaser', start: 'top 85%', toggleActions: 'play none none reverse' }, y: 40, opacity: 0, stagger: 0.2, duration: 0.7, ease: 'power3.out' });
+
+    const overlay = document.getElementById('page-transition-overlay');
+    document.querySelectorAll('a[href^="index.html"], a[href$=".html"]:not([href="#"])').forEach(link => {
+      link.addEventListener('click', e => {
+        const href = link.getAttribute('href');
+        if (href === '#' || href.startsWith('#')) return;
+        e.preventDefault();
+        overlay.classList.add('active');
+        setTimeout(() => { window.location.href = href; }, 500);
+      });
+    });
+  </script>
+</body>
+</html>
